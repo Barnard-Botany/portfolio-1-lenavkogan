@@ -20,7 +20,7 @@ map('world', fill=T, col="grey", bg="light blue", xlim=c(-180,-20), ylim=c(-60, 
 #plot(a_arabicum_range, col="green", add=T)
 points(cbind(a_arabicum_occurence$longitude, a_arabicum_occurence$latitude), col="blue", pch=20, cex=1)
 ```
-Now I am making a map for the avocado plant.
+Now I am making a map for the avocado plant. There is both occurence data and range data available for Persea americana, a species of avocado plant.
 ```{r}
 avocado_range <- BIEN_ranges_load_species("Persea americana")
 avocado_occurence <- BIEN_occurrence_species(species = "Persea americana")
@@ -28,29 +28,29 @@ map('world', fill=T, col="grey", bg="light blue", xlim=c(-180,-20), ylim=c(-60, 
 plot(avocado_range, col="green", add=T)
 points(cbind(avocado_occurence$longitude, avocado_occurence$latitude), col="blue", pch=20, cex=1)
 ```
-PART 2: TRAIT DATA
+Part 2: Trait Data
 
 Species 1: Avocados
-I am comparing two species, Persea americana and Persea borbonia. First, I will do Persea americana,
+I am comparing two species, Persea americana and Persea borbonia. Specifically, I have chosen to look at plant height in the species and analyze the data for any significant differences in plant height between these two species. First, I will do Persea americana.
 ```{r}
 Persea_americana <- BIEN_trait_traitbyspecies(trait = "whole plant height", species = "Persea americana")
 str(Persea_americana)
 Persea_americana
 ```
 
-Now, I am going to do Persea borbonia.
+Now, I am going to do Persea borbonia, another species of the avocado plant. Again, in order to obtain a comparison between the two species, I am looking at the same trait (plant height).
 ```{r}
 Persea_borbonia <- BIEN_trait_traitbyspecies(trait = "whole plant height", species = "Persea borbonia")
 str(Persea_borbonia)
 Persea_borbonia
 ```
-Now, I will commute the mean of each of these avocado species.
+Now, I will compute the mean plant height of each of these avocado species, so that I can compare the two across all of the available data on BIEN.
 ```{r}
-americana = Persea_americana[c(3)]
+americana = Persea_americana[c(3)] 
 americana = as.data.frame(americana)
 americana_height = as.numeric(americana$trait_value)
 mean(americana_height, data=americana)
-borbonia = Persea_borbonia[c(3)]
+borbonia = Persea_borbonia[c(3)] 
 borbonia = as.data.frame(borbonia)
 borbonia_height = as.numeric(borbonia$trait_value)
 mean(borbonia_height, data=borbonia)
@@ -66,42 +66,47 @@ boxplot(borbonia_height)
 t.test(americana_height, borbonia_height)
 ```
 
-Because the p-value is less than 0.05, (in fact, it's an extremely small value), the height difference between the two species of avocados is significant.
+Because the p-value is less than 0.05, (in fact, it's an extremely small value, WAY less than 0.05), the height difference between the two species of avocados is significant.
 
-Species 2: Cashew
-I am going to compare two species of cashew I am comparing Anacardium occidentale and Anacardium excelsum.
-```{r}
-Anacardium_occidentale <- BIEN_trait_traitbyspecies(trait = "seed mass", species = "Anacardium occidentale")
-str(Anacardium_occidentale)
-Anacardium_occidentale
-```
+Species 2: Chocolate
+I am going to compare two species of cashews. I am comparing Anacardium occidentale and Anacardium excelsum. I wanted to do chocolate, but besides Theobroma subincanum, none of the other species in the Theobroma genus had available data in BIEN data, so I decided to switch to cashews.
 ```{r}
 Anacardium_excelsum <- BIEN_trait_traitbyspecies(trait = "seed mass", species = "Anacardium excelsum")
 str(Anacardium_excelsum)
 Anacardium_excelsum
 ```
+Here is the data for the seocnd species, Anacardium occidentale.
 ```{r}
-excelsum = Anacardium_excelsum[c(3)]
+Anacardium_occidentale <- BIEN_trait_traitbyspecies(trait = "seed mass", species = "Anacardium occidentale")
+str(Anacardium_occidentale)
+Anacardium_occidentale
+```
+Now, I will calculate the mean seed mass of each cashew species.
+
+```{r}
+excelsum = Anacardium_excelsum[c(3)] 
 excelsum = as.data.frame(excelsum)
 excelsum_mass = as.numeric(excelsum$trait_value)
 mean(excelsum_mass, data=excelsum)
-occidentale = Anacardium_occidentale[c(3)]
+occidentale = Anacardium_occidentale[c(3)] 
 occidentale = as.data.frame(occidentale)
 occidentale_mass = as.numeric(occidentale$trait_value)
-mean(occidentale_mass, data=borbonia)
+mean(occidentale_mass, data=occidentale)
 ```
-```{r}
-boxplot(occidentale_mass)
-```
+Next, I will construct box plots of the data for each of the cashew species. Here is a box plot of Anacardium excelsum.
 ```{r}
 boxplot(excelsum_mass)
 ```
+And here we have a boxplot of the mass data for the other cashew species, Anacardium occidentale.
+```{r}
+boxplot(occidentale_mass)
+```
+
+Now that we have the two box plots, we can conduct a t-test.
 
 ```{r}
 t.test(excelsum_mass, occidentale_mass)
-
 ```
 
-
-
+There is no significant difference in seed mass between the two cashew species that I chose, though that is understandable, since it makes sense that two plants of the same genus will share similar seed characteristics. The p-value, unlike for the avocado plant height trait, is high, and therefore we have to accept the null hypothesis that there is no significant difference in seed mass between the two chosen cashew species.
 
