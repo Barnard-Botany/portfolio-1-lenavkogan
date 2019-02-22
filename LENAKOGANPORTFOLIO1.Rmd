@@ -1,0 +1,107 @@
+---
+title: "Portfolio 1: Part 1.4 LENA KOGAN"
+output: html_notebook
+---
+Part 1: Maps
+```{r}
+library("BIEN")
+library(ape) #Package for working with phylogenies in R
+library(maps) #Useful for making quick maps of occurrences
+library(sp) # A package for spatial data
+library(dplyr)
+library(lattice)
+```
+
+Now, I am making the map.This species does not have any range data in BIEN, so I have made a map with only the occurence data.
+```{r}
+#a_arabicum_range <- BIEN_ranges_load_species("Aethionema arabicum")
+a_arabicum_occurence <- BIEN_occurrence_species(species = "Aethionema arabicum")
+map('world', fill=T, col="grey", bg="light blue", xlim=c(-180,-20), ylim=c(-60, 80))
+#plot(a_arabicum_range, col="green", add=T)
+points(cbind(a_arabicum_occurence$longitude, a_arabicum_occurence$latitude), col="blue", pch=20, cex=1)
+```
+Now I am making a map for the avocado plant.
+```{r}
+avocado_range <- BIEN_ranges_load_species("Persea americana")
+avocado_occurence <- BIEN_occurrence_species(species = "Persea americana")
+map('world', fill=T, col="grey", bg="light blue", xlim=c(-180,-20), ylim=c(-60, 80))
+plot(avocado_range, col="green", add=T)
+points(cbind(avocado_occurence$longitude, avocado_occurence$latitude), col="blue", pch=20, cex=1)
+```
+PART 2: TRAIT DATA
+
+Species 1: Avocados
+I am comparing two species, Persea americana and Persea borbonia. First, I will do Persea americana,
+```{r}
+Persea_americana <- BIEN_trait_traitbyspecies(trait = "whole plant height", species = "Persea americana")
+str(Persea_americana)
+Persea_americana
+```
+
+Now, I am going to do Persea borbonia.
+```{r}
+Persea_borbonia <- BIEN_trait_traitbyspecies(trait = "whole plant height", species = "Persea borbonia")
+str(Persea_borbonia)
+Persea_borbonia
+```
+Now, I will commute the mean of each of these avocado species.
+```{r}
+americana = Persea_americana[c(3)]
+americana = as.data.frame(americana)
+americana_height = as.numeric(americana$trait_value)
+mean(americana_height, data=americana)
+borbonia = Persea_borbonia[c(3)]
+borbonia = as.data.frame(borbonia)
+borbonia_height = as.numeric(borbonia$trait_value)
+mean(borbonia_height, data=borbonia)
+```
+```{r}
+boxplot(americana_height)
+```
+
+```{r}
+boxplot(borbonia_height)
+```
+```{r}
+t.test(americana_height, borbonia_height)
+```
+
+Because the p-value is less than 0.05, (in fact, it's an extremely small value), the height difference between the two species of avocados is significant.
+
+Species 2: Cashew
+I am going to compare two species of cashew I am comparing Anacardium occidentale and Anacardium excelsum.
+```{r}
+Anacardium_occidentale <- BIEN_trait_traitbyspecies(trait = "seed mass", species = "Anacardium occidentale")
+str(Anacardium_occidentale)
+Anacardium_occidentale
+```
+```{r}
+Anacardium_excelsum <- BIEN_trait_traitbyspecies(trait = "seed mass", species = "Anacardium excelsum")
+str(Anacardium_excelsum)
+Anacardium_excelsum
+```
+```{r}
+excelsum = Anacardium_excelsum[c(3)]
+excelsum = as.data.frame(excelsum)
+excelsum_mass = as.numeric(excelsum$trait_value)
+mean(excelsum_mass, data=excelsum)
+occidentale = Anacardium_occidentale[c(3)]
+occidentale = as.data.frame(occidentale)
+occidentale_mass = as.numeric(occidentale$trait_value)
+mean(occidentale_mass, data=borbonia)
+```
+```{r}
+boxplot(occidentale_mass)
+```
+```{r}
+boxplot(excelsum_mass)
+```
+
+```{r}
+t.test(excelsum_mass, occidentale_mass)
+
+```
+
+
+
+
